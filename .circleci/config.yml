@@ -27,7 +27,9 @@ jobs:
             - checkout
             - setup_remote_docker
             - run:
-                command: sh .circleci/security_checks.sh
+                command: |
+                    chmod +x .circleci/security_checks.sh
+                    sh .circleci/security_checks.sh
             - store_artifacts:
                 path: /tmp/artifacts/hawkeye_report.json
 
@@ -49,7 +51,10 @@ jobs:
         executor: my-executor
         working_directory: ~/serverless-gcp-functions-circleci
         steps:
-            - run: sh .circleci/static-code-check.sh
+            - run:
+                command: |
+                    chmod +x .circleci/static-code-check.sh
+                    sh .circleci/static-code-check.sh
             - store_test_results:
                 path: test-results
 
@@ -57,7 +62,10 @@ jobs:
         executor: my-executor
         working_directory: ~/serverless-gcp-functions-circleci
         steps:
-            - run: sh .circleci/unit-test.sh
+            - run:
+                command: |
+                    chmod +x .circleci/unit-test.sh
+                    sh .circleci/unit-test.sh
             - store_test_results:
                 path: test-results
 
