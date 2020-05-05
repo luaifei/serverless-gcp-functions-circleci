@@ -20,7 +20,7 @@ package:
 
 functions:
     test_serverless:
-        handler: src.main.print_time
+        handler: print_time
         events:
             - event:
                   eventType: providers/cloud.pubsub/eventTypes/topic.publish
