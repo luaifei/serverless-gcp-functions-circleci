@@ -33,7 +33,7 @@ jobs:
 
     set-up:
         executor: my-executor
-        working_directory: ~/repo
+        working_directory: ~/serverless-gcp-functions-circleci
         steps:
             - checkout
             - run:
@@ -47,7 +47,7 @@ jobs:
 
     static-code-check:
         executor: my-executor
-        working_directory: ~/repo
+        working_directory: ~/serverless-gcp-functions-circleci
         steps:
             - run: sh .circleci/static-code-check.sh
             - store_test_results:
@@ -55,7 +55,7 @@ jobs:
 
     unit-test:
         executor: my-executor
-        working_directory: ~/repo
+        working_directory: ~/serverless-gcp-functions-circleci
         steps:
             - run: sh .circleci/unit-test.sh
             - store_test_results:
@@ -63,13 +63,13 @@ jobs:
 
     deploy-dev:
         executor: my-executor
-        working_directory: ~/repo
+        working_directory: ~/serverless-gcp-functions-circleci
         steps:
             - deploy
 
     deploy-staging:
         executor: my-executor
-        working_directory: ~/repo
+        working_directory: ~/serverless-gcp-functions-circleci
         steps:
             - deploy:
                 service-key: STAGING_SERVICE_KEY
@@ -77,7 +77,7 @@ jobs:
 
     deploy-prod:
         executor: my-executor
-        working_directory: ~/repo
+        working_directory: ~/serverless-gcp-functions-circleci
         steps:
             - deploy:
                 service-key: PROD_SERVICE_KEY
