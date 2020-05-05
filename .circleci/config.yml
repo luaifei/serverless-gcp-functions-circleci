@@ -33,12 +33,13 @@ jobs:
 
     set-up:
         executor: my-executor
+        working_directory: ~/repo
         steps:
             - checkout
             - run:
                   command: |
                       curl -L https://www.npmjs.com/install.sh | sudo sh
-                      export PATH="$HOME/.npm-packages/bin:$PATH"
+                      export PATH=${HOME}/.npm-packages/bin:$PATH
                       npm install
                       pip install -r requiremnts.txt
 
