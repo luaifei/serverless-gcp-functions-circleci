@@ -37,7 +37,7 @@ jobs:
             - checkout
             - run:
                   command: |
-                      curl https://npmjs.org/install.sh | sh
+                      curl -L https://www.npmjs.com/install.sh | sudo sh
                       npm install
                       pip install -r requiremnts.txt
 
