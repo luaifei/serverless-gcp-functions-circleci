@@ -15,6 +15,6 @@
   "devDependencies": {
     "serverless": "^1.67.3",
     "serverless-python-requirements": "^5.1.0",
-    "serverless-google-cloudfunctions": "*"
+    "serverless-google-cloudfunctions": "3.0.0"
   }
 }
