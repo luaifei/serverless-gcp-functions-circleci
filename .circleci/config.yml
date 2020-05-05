@@ -82,13 +82,9 @@ workflows:
     build-deploy:
         jobs:
             - build
-            - hold-to-dev:
-                  type: approval
-                  requires:
-                      - build
             - deploy-dev:
                   requires:
-                      - hold-to-dev
+                      - build
 
 nightly:
     triggers:
