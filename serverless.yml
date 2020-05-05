@@ -5,7 +5,7 @@ provider:
     runtime: python37
     region: us-central1
     project: ${env:PROJECT_ID}
-    credentials: ~/.gcloud/keyfile.json
+    credentials: ~/gcloud-service-key.json
 
 plugins:
     - serverless-google-cloudfunctions

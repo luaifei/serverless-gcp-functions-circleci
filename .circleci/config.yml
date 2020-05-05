@@ -25,7 +25,7 @@ commands:
                 default: "digitaloptimisation-dev"
         steps:
             - run: export PROJECT_ID=<<parameters.project-id>>
-            - run: echo $<<parameters.service-key>> > ${HOME}/.gcloud/keyfile.json
+            - run: echo $<<parameters.service-key>> > ${HOME}/gcloud-service-key.json
             - run: serverless deploy
 
 jobs:
