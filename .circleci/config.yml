@@ -24,9 +24,11 @@ commands:
                 type: string
                 default: "digitaloptimisation-dev"
         steps:
-            - run: export PROJECT_ID=<<parameters.project-id>>
-            - run: echo $<<parameters.service-key>> > ${HOME}/gcloud-service-key.json
-            - run: ./node_modules/.bin/sls deploy
+            - run:
+                command: |
+                    export PROJECT_ID=<<parameters.project-id>>
+                    echo $<<parameters.service-key>> > ${HOME}/gcloud-service-key.json
+                    ./node_modules/.bin/sls deploy
 
 jobs:
     security-checks:
