@@ -46,16 +46,16 @@ jobs:
         working_directory: ~/repo
         steps:
             - run: sh .circleci/static-code-check.sh
-        store_test_results:
-            path: test-results
+            - store_test_results:
+                path: test-results
 
     unit-test:
         executor: my-executor
         working_directory: ~/repo
         steps:
             - run: sh .circleci/unit-test.sh
-        store_test_results:
-            path: test-results
+            - store_test_results:
+                path: test-results
 
     deploy-dev:
         executor: my-executor
