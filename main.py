@@ -13,4 +13,4 @@ def print_time(data: dict, context: dict) -> None:
     """
     print(data)
     print(context)
-    print(datetime.date.today())
+    print(datetime.datetime.today())
