@@ -41,7 +41,6 @@ jobs:
 
     build:
         executor: my-executor
-        working_directory: ~/repo
         steps:
             - checkout
             - run:
@@ -51,19 +50,17 @@ jobs:
                     pip install -r requirements.txt
                     sh ci/static-code-check.sh
                     sh ci/unit-test.sh
-            - store_test_results:
+            - store_artifacts:
                 path: test-results
 
     deploy-dev:
         executor: my-executor
-        working_directory: ~/repo
         steps:
             - set-up
             - deploy
 
     deploy-staging:
         executor: my-executor
-        working_directory: ~/repo
         steps:
             - set-up
             - deploy:
@@ -72,7 +69,6 @@ jobs:
 
     deploy-prod:
         executor: my-executor
-        working_directory: ~/repo
         steps:
             - set-up
             - deploy:
