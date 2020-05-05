@@ -5,6 +5,15 @@ executors:
             - image: circleci/python:3.7.2
 
 commands:
+    set-up:
+        description:  "Set up env for serverless"
+        steps:
+            - checkout
+            - run:
+                command: |
+                    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+                    sudo apt-get install -y nodejs npm
+                    npm install
     deploy:
         description: "Deploy functions to GCP"
         parameters:
@@ -33,37 +42,17 @@ jobs:
             - store_artifacts:
                 path: /tmp/artifacts/hawkeye_report.json
 
-    set-up:
+    build:
         executor: my-executor
-        working_directory: ~/serverless-gcp-functions-circleci
+        working_directory: ~/repo
         steps:
             - checkout
             - run:
-                  command: |
-                      curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-                      sudo apt-get install -y nodejs npm
-                      npm install
-                      sudo chown -R $(whoami) /usr/local
-                      pip install --upgrade pip
-                      pip install -r requirements.txt
-
-    static-code-check:
-        executor: my-executor
-        working_directory: ~/serverless-gcp-functions-circleci
-        steps:
-            - run:
                 command: |
+                    python3 -m venv venv
+                    . venv/bin/activate
                     chmod +x .circleci/static-code-check.sh
                     sh .circleci/static-code-check.sh
-            - store_test_results:
-                path: test-results
-
-    unit-test:
-        executor: my-executor
-        working_directory: ~/serverless-gcp-functions-circleci
-        steps:
-            - run:
-                command: |
                     chmod +x .circleci/unit-test.sh
                     sh .circleci/unit-test.sh
             - store_test_results:
@@ -71,22 +60,25 @@ jobs:
 
     deploy-dev:
         executor: my-executor
-        working_directory: ~/serverless-gcp-functions-circleci
+        working_directory: ~/repo
         steps:
+            - set-up
             - deploy
 
     deploy-staging:
         executor: my-executor
-        working_directory: ~/serverless-gcp-functions-circleci
+        working_directory: ~/repo
         steps:
+            - set-up
             - deploy:
                 service-key: STAGING_SERVICE_KEY
                 project-id: digitaloptimisation-staging
 
     deploy-prod:
         executor: my-executor
-        working_directory: ~/serverless-gcp-functions-circleci
+        working_directory: ~/repo
         steps:
+            - set-up
             - deploy:
                 service-key: PROD_SERVICE_KEY
                 project-id: digitaloptimisation-prod
@@ -95,17 +87,11 @@ workflows:
     version: 2
     build-deploy:
         jobs:
-            - set-up
-            - static-code-check:
-                  requires:
-                      - set-up
-            - unit-test:
-                  requires:
-                      - static-code-check
+            - build:
             - hold-to-dev:
                   type: approval
                   requires:
-                      - unit-test
+                      - build
             - deploy-dev:
                   requires:
                       - hold-to-dev
