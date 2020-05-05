@@ -41,7 +41,7 @@ jobs:
                       curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
                       sudo apt-get install -y nodejs npm
                       npm install
-                      pip install -r requiremnts.txt
+                      pip install -r requirements.txt
 
     static-code-check:
         executor: my-executor
