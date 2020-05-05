@@ -35,10 +35,7 @@ jobs:
         steps:
             - checkout
             - setup_remote_docker
-            - run:
-                command: |
-                    chmod +x .circleci/security_checks.sh
-                    sh .circleci/security_checks.sh
+            - run: sh ci/security_checks.sh
             - store_artifacts:
                 path: /tmp/artifacts/hawkeye_report.json
 
@@ -51,10 +48,9 @@ jobs:
                 command: |
                     python3 -m venv venv
                     . venv/bin/activate
-                    chmod +x .circleci/static-code-check.sh
-                    sh .circleci/static-code-check.sh
-                    chmod +x .circleci/unit-test.sh
-                    sh .circleci/unit-test.sh
+                    pip install -r requirements.txt
+                    sh ci/static-code-check.sh
+                    sh ci/unit-test.sh
             - store_test_results:
                 path: test-results
 
@@ -87,7 +83,7 @@ workflows:
     version: 2
     build-deploy:
         jobs:
-            - build:
+            - build
             - hold-to-dev:
                   type: approval
                   requires:
