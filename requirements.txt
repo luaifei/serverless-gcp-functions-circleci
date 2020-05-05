@@ -1,0 +1,11 @@
+# test framework
+pytest==5.4.1
+
+# pep8 check framework
+flake8==3.7.9
+
+# pytest plugin
+# cov plugin
+pytest-cov==2.8.1
+# output the test result in html
+pytest-html==2.1.1

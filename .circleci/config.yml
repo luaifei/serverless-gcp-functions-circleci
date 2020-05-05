@@ -1,0 +1,110 @@
+version: 2.1
+executors:
+    my-executor:
+        docker:
+            - image: circleci/python:3.7.2
+
+commands:
+    deploy:
+        description: "Deploy functions to GCP"
+        parameters:
+            service-key:
+                type: string
+                default: "DEVELOPMENT_SERVICE_KEY"
+            project-id:
+                type: string
+                default: "digitaloptimisation-dev"
+        steps:
+            - run: export PROJECT_ID=<<parameters.project-id>>
+            - run: echo $<<parameters.service-key>> > ${HOME}/.gcloud/keyfile.json
+            - run: serverless deploy
+
+jobs:
+    security-checks:
+        docker:
+            - image: docker:stable
+        steps:
+            - checkout
+            - setup_remote_docker
+            - run:
+                command: sh .circleci/security_checks.sh
+            - store_artifacts:
+                path: /tmp/artifacts/hawkeye_report.json
+
+    set-up:
+        executor: my-executor
+        steps:
+            - checkout
+            - run:
+                  command: |
+                      curl https://npmjs.org/install.sh | sh
+                      npm install
+                      pip install -r requiremnts.txt
+
+    static-code-check:
+        executor: my-executor
+        working_directory: ~/repo
+        steps:
+            - run: sh .circleci/static-code-check.sh
+        store_test_results:
+            path: test-results
+
+    unit-test:
+        executor: my-executor
+        working_directory: ~/repo
+        steps:
+            - run: sh .circleci/unit-test.sh
+        store_test_results:
+            path: test-results
+
+    deploy-dev:
+        executor: my-executor
+        working_directory: ~/repo
+        steps:
+            - deploy
+
+    deploy-staging:
+        executor: my-executor
+        working_directory: ~/repo
+        steps:
+            - deploy:
+                service-key: STAGING_SERVICE_KEY
+                project-id: digitaloptimisation-staging
+
+    deploy-prod:
+        executor: my-executor
+        working_directory: ~/repo
+        steps:
+            - deploy:
+                service-key: PROD_SERVICE_KEY
+                project-id: digitaloptimisation-prod
+
+workflows:
+    version: 2
+    build-deploy:
+        jobs:
+            - set-up
+            - static-code-check:
+                  requires:
+                      - set-up
+            - unit-test:
+                  requires:
+                      - static-code-check
+            - hold-to-dev:
+                  type: approval
+                  requires:
+                      - unit-test
+            - deploy-dev:
+                  requires:
+                      - hold-to-dev
+
+nightly:
+    triggers:
+        - schedule:
+            cron: "0 1 * * *"
+            filters:
+                branches:
+                    only:
+                        - master
+    jobs:
+        - security-checks

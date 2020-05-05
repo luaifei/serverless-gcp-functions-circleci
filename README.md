@@ -1,0 +1,1 @@
+Using Serverless to deploy Functions to GCP with CircleCI as the CI/CD tool.
