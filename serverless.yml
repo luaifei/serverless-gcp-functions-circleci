@@ -10,10 +10,18 @@ provider:
 plugins:
     - serverless-google-cloudfunctions
 
+package:
+    exclude:
+        - node_modules/**
+        - .gitignore
+        - .git/**
+        - venv/**
+        - .circleci/**
+
 functions:
     test_serverless:
         handler: print_time
         events:
             - event:
                   eventType: providers/cloud.pubsub/eventTypes/topic.publish
-                  resource: projects/digitaloptimisation-dev/topics/test-serverless
+                  resource: projects/${env:PROJECT_ID}/topics/test-serverless
