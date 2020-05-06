@@ -23,12 +23,15 @@ commands:
             project-id:
                 type: string
                 default: "digitaloptimisation-dev"
+            stage:
+                type: string
+                default: "dev"
         steps:
             - run:
                 command: |
                     export PROJECT_ID=<<parameters.project-id>>
                     echo $<<parameters.service-key>> > ${HOME}/gcloud-service-key.json
-                    ./node_modules/.bin/sls deploy
+                    ./node_modules/.bin/sls deploy --stage <<parameters.stage>>
 
 jobs:
     security-checks:
@@ -68,6 +71,7 @@ jobs:
             - deploy:
                 service-key: STAGING_SERVICE_KEY
                 project-id: digitaloptimisation-staging
+                stage: staging
 
     deploy-prod:
         executor: my-executor
@@ -76,6 +80,7 @@ jobs:
             - deploy:
                 service-key: PROD_SERVICE_KEY
                 project-id: digitaloptimisation-prod
+                stage: prod
 
 workflows:
     version: 2

@@ -6,6 +6,11 @@ provider:
     region: us-central1
     project: ${env:PROJECT_ID}
     credentials: ~/gcloud-service-key.json
+    stage: ${opt:stage, 'dev'}
+    memorySize: 256
+    timeout: 28
+    environment:
+        PLATFORM_BASE_URL: ${env:${opt:stage, 'dev'}_PLATFORM_BASE_URL}
 
 plugins:
     - serverless-google-cloudfunctions
