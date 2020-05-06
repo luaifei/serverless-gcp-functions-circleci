@@ -8,7 +8,7 @@ provider:
     credentials: ~/gcloud-service-key.json
     stage: ${opt:stage, 'dev'}
     memorySize: 256
-    timeout: 28
+    timeout: 30
     environment:
         PLATFORM_BASE_URL: ${env:${opt:stage, 'dev'}_PLATFORM_BASE_URL}
 
